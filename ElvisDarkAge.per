@@ -1,0 +1,144 @@
+(defconst num-dark-age-strikeforce 3)
+(defconst num-dark-age-villagers 30)
+
+(defrule
+(true)
+=>
+(set-strategic-number sn-food-gatherer-percentage 70)
+(set-strategic-number sn-wood-gatherer-percentage 30)
+(set-strategic-number sn-gold-gatherer-percentage 0)
+(set-strategic-number sn-stone-gatherer-percentage 0)
+(disable-self)
+)
+
+(defrule ; Let's go to the next age!!
+(current-age == dark-age)
+(building-type-count-total mill > 0)
+(building-type-count-total lumber-camp > 0)
+(unit-type-count-total villager >= num-dark-age-villagers)
+(can-research feudal-age)
+=>
+(research feudal-age)
+(chat-to-all "Elvis will see you in the next age, baby.")
+(set-strategic-number sn-food-gatherer-percentage 50)
+(set-strategic-number sn-wood-gatherer-percentage 30)
+(set-strategic-number sn-gold-gatherer-percentage 15)
+(set-strategic-number sn-stone-gatherer-percentage 5)
+(set-goal goal-past-dark TRUE)
+)
+
+(defrule ; We need to start gathering some gold.
+(unit-type-count villager > 15)
+=>
+(set-strategic-number sn-food-gatherer-percentage 50)
+(set-strategic-number sn-wood-gatherer-percentage 40)
+(set-strategic-number sn-gold-gatherer-percentage 10)
+(set-strategic-number sn-stone-gatherer-percentage 0)
+(disable-self)
+)
+
+; Let's introduce ourselves.
+(defrule
+(unit-type-count villager > 0)
+=>
+(chat-to-all "The king is in the building.")
+(disable-self) ;<~~~the disable-self action
+)
+
+(defrule
+(current-age == dark-age)
+(unit-type-count-total villager < num-dark-age-villagers)
+(can-train villager)
+=>
+(train villager)
+)
+
+(defrule
+(building-type-count-total house > 0) ; We want to build a house before a mill
+(building-type-count-total mill == 0) ; Prevents the construction of multiple mills
+(resource-found food) ; Builds a mill only if forage bushes or deer is found
+(can-build mill)
+=>
+(build mill)
+)
+
+(defrule
+(building-type-count-total mill > 0)
+(building-type-count-total lumber-camp == 0)
+(resource-found wood)
+(can-build lumber-camp)
+=>
+(build lumber-camp)
+)
+
+(defrule
+(building-type-count-total mill > 0)
+(building-type-count-total lumber-camp > 0)
+(unit-type-count-total villager > 10)
+(building-type-count-total mining-camp == 0)
+(resource-found gold)
+(can-build mining-camp)
+=>
+(build mining-camp)
+)
+
+(defrule
+(building-type-count-total mill > 0)
+(building-type-count-total lumber-camp > 0)
+(unit-type-count-total villager > 10)
+(building-type-count-total mining-camp > 0)
+(building-type-count-total mining-camp < 2)
+(resource-found stone)
+(can-build mining-camp)
+=>
+(build mining-camp)
+)
+
+(defrule
+(current-age == dark-age)
+(building-type-count-total lumber-camp > 0) ; We want a lumber camp before farms
+(unit-type-count-total villager > 15)
+(building-type-count-total farm < 15)
+(idle-farm-count < 4) ; Only build farms if there are less than 4 idle farms
+=>
+(build farm)
+)
+
+; Construct barracks.
+(defrule
+(building-type-count-total mill > 0)
+(building-type-count-total lumber-camp > 0)
+(building-type-count-total barracks == 0)
+(can-build barracks)
+=>
+(build barracks)
+(chat-to-all "Elvis is bringing in some firepower. Or manpower. Just manpower, really.")
+)
+
+; Let's train some soldiers.
+(defrule
+(unit-type-count-total militiaman-line <= num-dark-age-strikeforce)
+(can-afford-unit militiaman)
+(goal goal-dark-age-attack TRUE)
+=>
+(train militiaman)
+)
+
+; If they're ready to rock, let's roll.
+(defrule
+(not(town-under-attack))
+(unit-type-count-total militiaman-line > num-dark-age-strikeforce)
+=>
+(attack-now)
+(chat-to-all "Ready or not, here I come.")
+(set-goal goal-dark-age-attack FALSE)
+(disable-self)
+)
+
+; Let's research Loom.
+(defrule
+(can-research ri-loom)
+=>
+(research ri-loom)
+(disable-self)
+)

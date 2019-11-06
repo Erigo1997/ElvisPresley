@@ -1,0 +1,64 @@
+(defconst num-castle-age-villagers 80)
+(defconst num-knight-squad 5)
+
+(defrule
+(goal goal-past-feudal TRUE)
+(building-type-count-total stable < 3)
+(can-build stable)
+=>
+(build stable)
+)
+
+; Let's train some knights!.
+(defrule
+(goal goal-past-feudal TRUE)
+(unit-type-count-total knight-line <= num-knight-squad)
+(can-afford-unit knight-line)
+=>
+(train knight-line)
+)
+
+; If they're ready to rock - again - let's roll!
+(defrule
+(not(town-under-attack))
+(unit-type-count-total knight-line > num-dark-age-strikeforce)
+=>
+(attack-now)
+(chat-to-all "Here comes the one for the money.")
+(disable-self)
+)
+
+(defrule
+(current-age == castle-age)
+(unit-type-count-total villager < num-castle-age-villagers)
+(can-train villager)
+=>
+(train villager)
+)
+
+(defrule
+(true)
+(goal goal-past-feudal TRUE)
+(can-build watch-tower-line)
+=>
+(build-forward watch-tower-line)
+(disable-self)
+)
+
+(defrule
+(goal goal-past-feudal TRUE)
+(building-type-count-total town-center < 3)
+(can-build town-center)
+=>
+(build town-center)
+)
+
+(defrule
+(goal goal-past-feudal TRUE)
+(building-type-count-total castle < 1)
+(can-build castle)
+=>
+(build castle)
+)
+
+

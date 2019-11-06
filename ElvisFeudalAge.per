@@ -1,0 +1,65 @@
+(defconst num-feudal-age-villagers 40)
+
+(defrule ; Let's go to the next age!!
+(current-age == feudal-age)
+(building-type-count-total blacksmith > 0)
+(building-type-count-total stable > 0)
+(unit-type-count-total villager >= num-feudal-age-villagers)
+(can-research castle-age)
+=>
+(research castle-age)
+(chat-to-all "Elvis will see you in the next age, baby.")
+(set-strategic-number sn-food-gatherer-percentage 30)
+(set-strategic-number sn-wood-gatherer-percentage 30)
+(set-strategic-number sn-gold-gatherer-percentage 20)
+(set-strategic-number sn-stone-gatherer-percentage 20)
+(set-goal goal-past-feudal TRUE)
+)
+
+
+
+(defrule
+(current-age == feudal-age)
+(unit-type-count-total villager < num-feudal-age-villagers)
+(can-train villager)
+=>
+(train villager)
+)
+
+; Let's research the essential blacksmith stuff.
+(defrule
+(can-research ri-forging)
+=>
+(research ri-forging)
+)
+
+(defrule
+(can-research ri-scale-barding)
+=>
+(research ri-scale-barding)
+)
+
+(defrule
+(goal goal-past-dark TRUE)
+(building-type-count-total blacksmith < 1)
+(can-build blacksmith)
+=>
+(build blacksmith)
+)
+
+(defrule
+(goal goal-past-dark TRUE)
+(building-type-count-total stable < 1)
+(can-build stable)
+=>
+(build stable)
+)
+
+(defrule
+(true)
+(goal goal-past-dark TRUE)
+(can-build watch-tower-line)
+=>
+(build-forward watch-tower-line)
+(disable-self)
+)
