@@ -1,4 +1,6 @@
 (defconst num-feudal-age-villagers 40)
+(defconst timer-new-camp 1)
+(defconst timer-new-mill 2)
 
 (defrule ; Let's go to the next age!!
 (current-age == feudal-age)
@@ -16,7 +18,39 @@
 (set-goal goal-past-feudal TRUE)
 )
 
+(defrule
+(goal goal-past-dark TRUE)
+(true)
+=>
+(enable-timer timer-new-camp 1)
+(disable-self)
+)
 
+(defrule
+(goal goal-past-dark TRUE)
+(true)
+=>
+(enable-timer timer-new-mill 1)
+(disable-self)
+)
+
+(defrule
+(timer-triggered timer-new-camp)
+(can-build mining-camp)
+(can-build lumber-camp)
+=>
+(build mining-camp)
+(build lumber-camp)
+(enable-timer timer-new-camp 300)
+)
+
+(defrule
+(timer-triggered timer-new-camp)
+(can-build mill)
+=>
+(build mill)
+(enable-timer timer-new-camp 300)
+)
 
 (defrule
 (current-age == feudal-age)

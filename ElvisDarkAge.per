@@ -115,26 +115,6 @@
 (chat-to-all "Elvis is bringing in some firepower. Or manpower. Just manpower, really.")
 )
 
-; Let's train some soldiers.
-(defrule
-(unit-type-count-total militiaman-line <= num-dark-age-strikeforce)
-(can-afford-unit militiaman)
-(goal goal-dark-age-attack TRUE)
-=>
-(train militiaman)
-)
-
-; If they're ready to rock, let's roll.
-(defrule
-(not(town-under-attack))
-(unit-type-count-total militiaman-line > num-dark-age-strikeforce)
-=>
-(attack-now)
-(chat-to-all "Ready or not, here I come.")
-(set-goal goal-dark-age-attack FALSE)
-(disable-self)
-)
-
 ; Let's research Loom.
 (defrule
 (can-research ri-loom)
