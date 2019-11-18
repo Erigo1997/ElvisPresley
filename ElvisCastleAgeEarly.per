@@ -1,12 +1,117 @@
 (defconst num-castle-age-villagers 80)
 (defconst num-knight-squad 4)
 
+; This is when the early castle ends and late begins. We start focusing on more diverse units.
+(defrule
+(goal goal-past-feudal TRUE)
+(building-type-count-total castle < 1)
+(building-type-count-total stable < 2)
+(building-type-count-total town-center < 2)
+(can-build stable)
+=>
+(set-goal goal-past-earlycastle TRUE)
+)
+
+(defrule
+(can-build lumber-camp)
+=>
+(build lumber-camp)
+(disable-self)
+)
+
 (defrule
 (goal goal-past-feudal TRUE)
 (building-type-count-total stable < 3)
 (can-build stable)
 =>
 (build stable)
+)
+
+; Let's train some knights!.
+(defrule
+(current-age == castle-age)
+(unit-type-count-total knight-line <= 30)
+(can-afford-unit knight-line)
+=>
+(train knight-line)
+)
+
+; If they're ready to rock - again - let's roll!
+(defrule
+(not(town-under-attack))
+(unit-type-count-total knight-line > num-knight-squad)
+(can-build watch-tower-line)
+=>
+(attack-now)
+(build-forward watch-tower-line)
+(chat-to-all "Here comes the one for the money.")
+(disable-self)
+)
+
+(defrule
+(current-age == castle-age)
+(unit-type-count-total villager < num-castle-age-villagers)
+(can-train villager)
+=>
+(train villager)
+)
+
+(defrule
+(goal goal-past-feudal TRUE)
+(building-type-count-total town-center < 3)
+(can-build town-center)
+=>
+(build town-center)
+)
+
+(defrule
+(goal goal-past-feudal TRUE)
+(can-build castle)
+=>
+(build castle)
+)
+
+
+; Some defense. -------------------
+
+(defrule
+(current-age == castle-age)
+(building-type-count-total watch-tower-line < 1)
+(can-build watch-tower-line)
+=>
+(build watch-tower-line)
+)
+
+(defrule
+(current-age == castle-age)
+(town-under-attack)
+(unit-type-count-total spearman-line <= 10)
+(can-afford-unit spearman-line)
+=>
+(train spearman-line)
+)
+
+
+; ----------------------------------------------
+
+; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Castle Age Researching ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(defrule
+(can-research ri-hand-cart)
+=>
+(research ri-hand-cart)
+)
+
+(defrule
+(can-research ri-gold-shaft-mining)
+=>
+(research ri-gold-shaft-mining)
+)
+
+(defrule
+(can-research ri-bow-saw)
+=>
+(research ri-bow-saw)
 )
 
 ; Let's research the essential blacksmith stuff.
@@ -22,57 +127,18 @@
 (research ri-chain-barding)
 )
 
-; Let's train some knights!.
 (defrule
 (goal goal-past-feudal TRUE)
-(unit-type-count-total knight-line <= 30)
-(can-afford-unit knight-line)
+(can-research ri-fletching)
 =>
-(train knight-line)
+(research ri-fletching)
 )
 
-; If they're ready to rock - again - let's roll!
 (defrule
 (not(town-under-attack))
-(unit-type-count-total knight-line > num-knight-squad)
+(can-research ri-pikeman)
 =>
-(attack-now)
-(chat-to-all "Here comes the one for the money.")
-(disable-self)
-)
-
-(defrule
-(current-age == castle-age)
-(unit-type-count-total villager < num-castle-age-villagers)
-(can-train villager)
-=>
-(train villager)
-)
-
-(defrule
-(true)
-(goal goal-past-feudal TRUE)
-(unit-type-count-total knight-line > num-knight-squad)
-(can-build watch-tower-line)
-=>
-(build-forward watch-tower-line)
-(disable-self)
-)
-
-(defrule
-(goal goal-past-feudal TRUE)
-(building-type-count-total town-center < 3)
-(can-build town-center)
-=>
-(build town-center)
-)
-
-(defrule
-(goal goal-past-feudal TRUE)
-(building-type-count-total castle < 1)
-(can-build castle)
-=>
-(build castle)
+(research ri-pikeman)
 )
 
 

@@ -1,0 +1,62 @@
+
+(defrule ; Let's go to the next age!!
+(goal goal-past-earlycastle TRUE)
+(can-research imperial-age)
+=>
+(research imperial-age)
+(chat-to-all "Elvis will see you in the next age, baby.")
+(set-strategic-number sn-food-gatherer-percentage 30)
+(set-strategic-number sn-wood-gatherer-percentage 30)
+(set-strategic-number sn-gold-gatherer-percentage 20)
+(set-strategic-number sn-stone-gatherer-percentage 20)
+(set-goal goal-past-castle TRUE)
+)
+
+(defrule
+(goal goal-past-earlycastle TRUE)
+(building-type-count-total university < 1)
+(can-build university)
+=>
+(build university)
+)
+
+(defrule
+(goal goal-past-earlycastle TRUE)
+(building-type-count-total siege-workshop < 1)
+(can-build siege-workshop)
+=>
+(build siege-workshop)
+)
+
+(defrule
+(goal goal-past-earlycastle TRUE)
+(building-type-count-total barracks < 3)
+(can-build barracks)
+=>
+(build barracks)
+)
+
+; Let's train some rams!
+(defrule
+(current-age == castle-age)
+(unit-type-count-total battering-ram-line <= 2)
+(can-afford-unit battering-ram-line)
+=>
+(train battering-ram-line)
+)
+
+
+
+; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Castle Age Late Researching ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(defrule
+(can-research ri-ballistics)
+=>
+(research ri-ballistics)
+)
+
+(defrule
+(can-research ri-murder-holes)
+=>
+(research ri-murder-holes)
+)

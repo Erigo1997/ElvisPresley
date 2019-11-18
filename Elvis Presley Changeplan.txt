@@ -1,0 +1,6 @@
+ElvisPresley Future Changes:
+
+- Lumber/Mill/Mining upgrades
+- Tighter boom
+- First lumber camp placement distance
+- Home watchtower closer to TC?

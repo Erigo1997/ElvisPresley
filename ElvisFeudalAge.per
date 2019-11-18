@@ -1,6 +1,7 @@
 (defconst num-feudal-age-villagers 40)
-(defconst timer-new-camp 1)
+(defconst timer-new-mining-camp 1)
 (defconst timer-new-mill 2)
+(defconst timer-new-lumber-camp 4)
 
 (defrule ; Let's go to the next age!!
 (current-age == feudal-age)
@@ -11,46 +12,65 @@
 =>
 (research castle-age)
 (chat-to-all "Elvis will see you in the next age, baby.")
-(set-strategic-number sn-food-gatherer-percentage 30)
-(set-strategic-number sn-wood-gatherer-percentage 30)
-(set-strategic-number sn-gold-gatherer-percentage 20)
-(set-strategic-number sn-stone-gatherer-percentage 20)
+(set-strategic-number sn-food-gatherer-percentage 50)
+(set-strategic-number sn-wood-gatherer-percentage 20)
+(set-strategic-number sn-gold-gatherer-percentage 15)
+(set-strategic-number sn-stone-gatherer-percentage 15)
 (set-goal goal-past-feudal TRUE)
 )
 
+
+; --------------------------------------- New Camps, throughout rest of game ------------------
+
 (defrule
-(goal goal-past-dark TRUE)
-(true)
+(current-age == feudal-age)
 =>
-(enable-timer timer-new-camp 1)
+(enable-timer timer-new-mining-camp 1)
 (disable-self)
 )
 
 (defrule
-(goal goal-past-dark TRUE)
-(true)
+(current-age == feudal-age)
+=>
+(enable-timer timer-new-lumber-camp 1)
+(disable-self)
+)
+
+(defrule
+(current-age == feudal-age)
 =>
 (enable-timer timer-new-mill 1)
 (disable-self)
 )
 
 (defrule
-(timer-triggered timer-new-camp)
-(can-build mining-camp)
+(timer-triggered timer-new-lumber-camp)
 (can-build lumber-camp)
+(building-type-count-total barracks > 0)
 =>
-(build mining-camp)
 (build lumber-camp)
-(enable-timer timer-new-camp 300)
+(enable-timer timer-new-lumber-camp num-new-camp-timer)
 )
 
 (defrule
-(timer-triggered timer-new-camp)
+(timer-triggered timer-new-mining-camp)
+(can-build mining-camp)
+(building-type-count-total barracks > 0)
+=>
+(build mining-camp)
+(enable-timer timer-new-mining-camp num-new-camp-timer)
+)
+
+(defrule
+(timer-triggered timer-new-mill)
 (can-build mill)
+(building-type-count-total barracks > 0)
 =>
 (build mill)
-(enable-timer timer-new-camp 300)
+(enable-timer timer-new-mill num-new-camp-timer)
 )
+
+; ----------------------------------------------------------------------------------------------
 
 (defrule
 (current-age == feudal-age)
@@ -58,6 +78,36 @@
 (can-train villager)
 =>
 (train villager)
+)
+
+(defrule
+(goal goal-past-dark TRUE)
+(building-type-count-total mining-camp > 0)
+(building-type-count-total mining-camp < 2)
+(resource-found stone)
+(can-build mining-camp)
+=>
+(build mining-camp)
+)
+
+; ~~~~~~~~~~~~~~ Researching for Feudal Age ~~~~~~~~~~~~~~
+
+(defrule
+(can-research ri-wheel-barrow)
+=>
+(research ri-wheel-barrow)
+)
+
+(defrule
+(can-research ri-gold-mining)
+=>
+(research ri-gold-mining)
+)
+
+(defrule
+(can-research ri-double-bit-axe)
+=>
+(research ri-double-bit-axe)
 )
 
 ; Let's research the essential blacksmith stuff.
@@ -72,6 +122,8 @@
 =>
 (research ri-scale-barding)
 )
+
+; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 (defrule
 (goal goal-past-dark TRUE)
@@ -89,11 +141,40 @@
 (build stable)
 )
 
+
+; Some defense. -------------------
+
 (defrule
-(true)
-(goal goal-past-dark TRUE)
+(current-age == feudal-age)
+(building-type-count-total watch-tower-line < 1)
 (can-build watch-tower-line)
 =>
-(build-forward watch-tower-line)
-(disable-self)
+(build watch-tower-line)
 )
+
+(defrule ; Let's keep a reserve at all times.
+(current-age == feudal-age)
+(unit-type-count-total spearman-line < 3)
+(can-afford-unit spearman-line)
+=>
+(train spearman-line)
+)
+
+(defrule
+(current-age == feudal-age)
+(town-under-attack)
+(unit-type-count-total spearman-line <= 8)
+(can-afford-unit spearman-line)
+=>
+(train spearman-line)
+)
+
+(defrule
+(goal goal-past-dark TRUE)
+(town-under-attack)
+(can-research ri-scale-mail)
+=>
+(research ri-scale-mail)
+)
+
+; ----------------------------------------------

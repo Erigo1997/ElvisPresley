@@ -1,0 +1,90 @@
+(defconst num-knight-army 15)
+(defconst num-spearman-army 20)
+(defconst timer-attack 3)
+(defconst num-castle-age-villagers 100)
+
+(defrule
+(current-age == imperial-age)
+(unit-type-count-total villager < num-imperial-age-villagers)
+(can-train villager)
+=>
+(train villager)
+)
+
+
+(defrule
+(current-age == imperial-age)
+=>
+(enable-timer timer-attack 180)
+(disable-self)
+)
+
+; Let's train some knights!.
+(defrule
+(current-age == imperial-age)
+(unit-type-count-total knight-line <= 20)
+(can-afford-unit knight-line)
+=>
+(train knight-line)
+)
+
+(defrule
+(current-age == imperial-age)
+(unit-type-count-total spearman-line <= 30)
+(can-afford-unit spearman-line)
+=>
+(train spearman-line)
+)
+
+(defrule
+(current-age == imperial-age)
+(unit-type-count-total trebuchet < 2)
+(can-afford-unit trebuchet)
+=>
+(train trebuchet)
+)
+
+
+; Check for Attacking
+(defrule
+(timer-triggered timer-attack)
+(not(town-under-attack))
+(unit-type-count-total knight-line > num-knight-army)
+(unit-type-count-total spearman-line > num-spearman-army)
+(unit-type-count-total trebuchet >= 2)
+=>
+(attack-now)
+(chat-to-all "Here comes the one for the money.")
+)
+
+; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Imperial Age Researching ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(defrule
+(can-research ri-halberdier)
+=>
+(research ri-halberdier)
+)
+
+(defrule
+(can-research ri-cavalier)
+=>
+(research ri-cavalier)
+)
+
+(defrule
+(can-research ri-paladin)
+=>
+(research ri-paladin)
+)
+
+(defrule
+(can-research ri-plate-barding)
+=>
+(research ri-plate-barding)
+)
+
+(defrule
+(can-research ri-blast-furnace)
+=>
+(research ri-blast-furnace)
+)

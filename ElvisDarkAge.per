@@ -1,5 +1,6 @@
 (defconst num-dark-age-strikeforce 3)
 (defconst num-dark-age-villagers 30)
+(defconst num-dark-age-villagers-age 20) ; Less than num-dark-age-villagers, so if we can go to next age early, let's do that.
 
 (defrule
 (true)
@@ -15,7 +16,7 @@
 (current-age == dark-age)
 (building-type-count-total mill > 0)
 (building-type-count-total lumber-camp > 0)
-(unit-type-count-total villager >= num-dark-age-villagers)
+(unit-type-count-total villager >= num-dark-age-villagers-age)
 (can-research feudal-age)
 =>
 (research feudal-age)
@@ -25,6 +26,7 @@
 (set-strategic-number sn-gold-gatherer-percentage 15)
 (set-strategic-number sn-stone-gatherer-percentage 5)
 (set-goal goal-past-dark TRUE)
+(chat-to-all "11")
 )
 
 (defrule ; We need to start gathering some gold.
@@ -42,7 +44,7 @@
 (unit-type-count villager > 0)
 =>
 (chat-to-all "The king is in the building.")
-(disable-self) ;<~~~the disable-self action
+(disable-self)
 )
 
 (defrule
@@ -74,21 +76,9 @@
 (defrule
 (building-type-count-total mill > 0)
 (building-type-count-total lumber-camp > 0)
-(unit-type-count-total villager > 10)
+(unit-type-count-total villager > 15)
 (building-type-count-total mining-camp == 0)
 (resource-found gold)
-(can-build mining-camp)
-=>
-(build mining-camp)
-)
-
-(defrule
-(building-type-count-total mill > 0)
-(building-type-count-total lumber-camp > 0)
-(unit-type-count-total villager > 10)
-(building-type-count-total mining-camp > 0)
-(building-type-count-total mining-camp < 2)
-(resource-found stone)
 (can-build mining-camp)
 =>
 (build mining-camp)
@@ -107,12 +97,12 @@
 ; Construct barracks.
 (defrule
 (building-type-count-total mill > 0)
+(unit-type-count villager > 20)
 (building-type-count-total lumber-camp > 0)
 (building-type-count-total barracks == 0)
 (can-build barracks)
 =>
 (build barracks)
-(chat-to-all "Elvis is bringing in some firepower. Or manpower. Just manpower, really.")
 )
 
 ; Let's research Loom.

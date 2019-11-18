@@ -6,12 +6,14 @@
 (defconst goal-dark-age-attack 1)
 (defconst goal-past-dark 2)
 (defconst goal-past-feudal 3)
+(defconst goal-past-earlycastle 4)
+(defconst goal-past-castle 5)
+(defconst num-new-camp-timer 800)
 
 ;Let's lay down some ground rules.
 (defrule
 (true)
 =>
-
 ; Here I set up some strategic numbers.
 (set-difficulty-parameter ability-to-dodge-missiles 100)
 (set-difficulty-parameter ability-to-maintain-distance 100)
@@ -29,6 +31,8 @@
 (set-goal goal-dark-age-attack TRUE)
 (set-goal goal-past-dark FALSE)
 (set-goal goal-past-feudal FALSE)
+(set-goal goal-past-earlycastle FALSE)
+(set-goal goal-past-castle TRUE)
 
 (disable-self)
 )
@@ -42,13 +46,15 @@
 )
 
 (defrule
-(goal goal-past-dark TRUE)
+(not(current-age == dark-age))
 (building-type-count-total farm < 35) ; We're capping farms at 35.
-(idle-farm-count < 4) ; Only build farms if there are less than 4 idle farms
+(idle-farm-count < 3) ; Only build farms if there are less than 3 idle farms
 =>
 (build farm)
 )
 
+(load "ElvisImperialAge")
+(load "ElvisCastleAgeLate")
 (load "ElvisCastleAgeEarly")
 (load "ElvisFeudalAge")
 (load "ElvisDarkAge")
