@@ -1,7 +1,8 @@
 (defconst num-knight-army 15)
 (defconst num-spearman-army 20)
+(defconst num-scorpion-army 6)
 (defconst timer-attack 3)
-(defconst num-castle-age-villagers 100)
+(defconst num-imperial-age-villagers 100)
 
 (defrule
 (current-age == imperial-age)
@@ -38,6 +39,14 @@
 
 (defrule
 (current-age == imperial-age)
+(unit-type-count-total scorpion-line <= 10)
+(can-afford-unit scorpion-line)
+=>
+(train scorpion-line)
+)
+
+(defrule
+(current-age == imperial-age)
 (unit-type-count-total trebuchet < 2)
 (can-afford-unit trebuchet)
 =>
@@ -51,13 +60,27 @@
 (not(town-under-attack))
 (unit-type-count-total knight-line > num-knight-army)
 (unit-type-count-total spearman-line > num-spearman-army)
+(unit-type-count-total scorpion-line > num-scorpion-army)
 (unit-type-count-total trebuchet >= 2)
 =>
 (attack-now)
+(enable-timer timer-attack 180)
 (chat-to-all "Here comes the one for the money.")
 )
 
 ; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Imperial Age Researching ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(defrule
+(can-research ri-plate-barding)
+=>
+(research ri-plate-barding)
+)
+
+(defrule
+(can-research ri-blast-furnace)
+=>
+(research ri-blast-furnace)
+)
 
 (defrule
 (can-research ri-halberdier)
@@ -72,19 +95,25 @@
 )
 
 (defrule
+(can-research ri-heavy-scorpion)
+=>
+(research ri-heavy-scorpion)
+)
+
+(defrule
+(can-research ri-architecture)
+=>
+(research ri-architecture)
+)
+
+(defrule
 (can-research ri-paladin)
 =>
 (research ri-paladin)
 )
 
 (defrule
-(can-research ri-plate-barding)
+(can-research ri-siege-engineers)
 =>
-(research ri-plate-barding)
-)
-
-(defrule
-(can-research ri-blast-furnace)
-=>
-(research ri-blast-furnace)
+(research ri-siege-engineers)
 )

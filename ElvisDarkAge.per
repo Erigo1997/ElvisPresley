@@ -21,8 +21,8 @@
 =>
 (research feudal-age)
 (chat-to-all "Elvis will see you in the next age, baby.")
-(set-strategic-number sn-food-gatherer-percentage 50)
-(set-strategic-number sn-wood-gatherer-percentage 30)
+(set-strategic-number sn-food-gatherer-percentage 45)
+(set-strategic-number sn-wood-gatherer-percentage 35)
 (set-strategic-number sn-gold-gatherer-percentage 15)
 (set-strategic-number sn-stone-gatherer-percentage 5)
 (set-goal goal-past-dark TRUE)
@@ -76,7 +76,7 @@
 (defrule
 (building-type-count-total mill > 0)
 (building-type-count-total lumber-camp > 0)
-(unit-type-count-total villager > 15)
+(unit-type-count-total villager > 14) ; One less than when we put villagers on gold. Hopefully it times.
 (building-type-count-total mining-camp == 0)
 (resource-found gold)
 (can-build mining-camp)
