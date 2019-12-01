@@ -8,7 +8,22 @@
 (defconst goal-past-feudal 3)
 (defconst goal-past-earlycastle 4)
 (defconst goal-past-castle 5)
+(defconst goal-all-researches 6)
 (defconst num-new-camp-timer 800)
+(defconst num-dark-age-strikeforce 3)
+(defconst num-dark-age-villagers 30)
+(defconst num-dark-age-villagers-age 20) ; Less than num-dark-age-villagers, so if we can go to next age early, let's do that.
+(defconst num-feudal-age-villagers 40)
+(defconst num-castle-age-villagers 80)
+(defconst num-knight-squad 4)
+(defconst num-knight-army 15)
+(defconst num-spearman-army 20)
+(defconst num-scorpion-army 6)
+(defconst num-imperial-age-villagers 100)
+(defconst timer-new-mining-camp 1)
+(defconst timer-new-mill 2)
+(defconst timer-new-lumber-camp 3)
+(defconst timer-attack 4)
 
 ;Let's lay down some ground rules.
 (defrule
@@ -33,7 +48,7 @@
 (set-goal goal-past-feudal FALSE)
 (set-goal goal-past-earlycastle FALSE)
 (set-goal goal-past-castle TRUE)
-
+(set-goal goal-all-researches FALSE)
 (disable-self)
 )
 
@@ -53,8 +68,8 @@
 (build farm)
 )
 
-(load "ElvisImperialAge")
-(load "ElvisCastleAgeLate")
-(load "ElvisCastleAgeEarly")
-(load "ElvisFeudalAge")
 (load "ElvisDarkAge")
+(load "ElvisFeudalAge")
+(load "ElvisCastleAgeEarly")
+(load "ElvisCastleAgeLate")
+(load "ElvisImperialAge")
