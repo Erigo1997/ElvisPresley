@@ -9,6 +9,10 @@
 (set-strategic-number sn-wood-gatherer-percentage 30)
 (set-strategic-number sn-gold-gatherer-percentage 0)
 (set-strategic-number sn-stone-gatherer-percentage 0)
+(set-escrow-percentage food 0) ; Set some starting escrows. We only need to conserve wood in the dark age for a barracks.
+(set-escrow-percentage wood 20)
+(set-escrow-percentage gold 0)
+(set-escrow-percentage stone 0)
 (disable-self)
 )
 
@@ -25,7 +29,6 @@
 (set-strategic-number sn-wood-gatherer-percentage 35)
 (set-strategic-number sn-gold-gatherer-percentage 15)
 (set-strategic-number sn-stone-gatherer-percentage 5)
-(set-goal goal-past-dark TRUE)
 (chat-to-all "11")
 )
 
@@ -100,8 +103,9 @@
 (unit-type-count villager > 20)
 (building-type-count-total lumber-camp > 0)
 (building-type-count-total barracks == 0)
-(can-build barracks)
+(can-build-with-escrow barracks)
 =>
+(release-escrow wood)
 (build barracks)
 )
 

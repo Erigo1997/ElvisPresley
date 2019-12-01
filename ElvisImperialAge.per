@@ -4,6 +4,19 @@
 (defconst timer-attack 3)
 (defconst num-imperial-age-villagers 100)
 
+(defrule ; When we arrive in the Imperial age.
+(current-age == imperial-age)
+=>
+(set-escrow-percentage food 25	)
+(set-escrow-percentage wood 15)
+(set-escrow-percentage gold 25)
+(set-escrow-percentage stone 0)
+(set-goal goal-past-castle TRUE)
+(enable-timer timer-attack 180)
+(disable-self)
+)
+
+
 (defrule
 (current-age == imperial-age)
 (unit-type-count-total villager < num-imperial-age-villagers)
@@ -11,20 +24,11 @@
 =>
 (train villager)
 )
-
-
-(defrule
-(current-age == imperial-age)
-=>
-(enable-timer timer-attack 180)
-(disable-self)
-)
-
 ; Let's train some knights!.
 (defrule
 (current-age == imperial-age)
 (unit-type-count-total knight-line <= 20)
-(can-afford-unit knight-line)
+(can-train knight-line)
 =>
 (train knight-line)
 )
@@ -32,7 +36,7 @@
 (defrule
 (current-age == imperial-age)
 (unit-type-count-total spearman-line <= 30)
-(can-afford-unit spearman-line)
+(can-train spearman-line)
 =>
 (train spearman-line)
 )
@@ -40,7 +44,7 @@
 (defrule
 (current-age == imperial-age)
 (unit-type-count-total scorpion-line <= 10)
-(can-afford-unit scorpion-line)
+(can-train scorpion-line)
 =>
 (train scorpion-line)
 )
@@ -48,7 +52,7 @@
 (defrule
 (current-age == imperial-age)
 (unit-type-count-total trebuchet < 2)
-(can-afford-unit trebuchet)
+(can-train trebuchet)
 =>
 (train trebuchet)
 )
@@ -71,49 +75,66 @@
 ; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Imperial Age Researching ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 (defrule
-(can-research ri-plate-barding)
+(can-research-with-escrow ri-plate-barding)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research ri-plate-barding)
 )
 
 (defrule
-(can-research ri-blast-furnace)
+(can-research-with-escrow ri-blast-furnace)
 =>
+
+(release-escrow food)
+(release-escrow gold)
 (research ri-blast-furnace)
 )
 
 (defrule
-(can-research ri-halberdier)
+(can-research-with-escrow ri-halberdier)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research ri-halberdier)
 )
 
 (defrule
-(can-research ri-cavalier)
+(can-research-with-escrow ri-cavalier)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research ri-cavalier)
 )
 
 (defrule
-(can-research ri-heavy-scorpion)
+(can-research-with-escrow ri-heavy-scorpion)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-heavy-scorpion)
 )
 
 (defrule
-(can-research ri-architecture)
+(can-research-with-escrow ri-architecture)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-architecture)
 )
 
 (defrule
-(can-research ri-paladin)
+(can-research-with-escrow ri-paladin)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research ri-paladin)
 )
 
 (defrule
-(can-research ri-siege-engineers)
+(can-research-with-escrow ri-siege-engineers)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-siege-engineers)
 )

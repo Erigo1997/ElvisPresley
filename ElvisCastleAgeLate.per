@@ -1,46 +1,69 @@
+(defrule ; This is when the early castle ends and late begins. We start focusing on more diverse units.
+(goal goal-past-feudal TRUE)
+(building-type-count-total castle < 1)
+(building-type-count-total stable < 2)
+(building-type-count-total town-center < 2)
+(can-build stable)
+=>
+(set-goal goal-past-earlycastle TRUE)
+)
+
 
 (defrule ; Let's go to the next age!!
 (goal goal-past-earlycastle TRUE)
-(can-research imperial-age)
+(can-research-with-escrow imperial-age)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research imperial-age)
 (chat-to-all "Elvis will see you in the next age, baby.")
 (set-strategic-number sn-food-gatherer-percentage 30)
 (set-strategic-number sn-wood-gatherer-percentage 30)
 (set-strategic-number sn-gold-gatherer-percentage 20)
 (set-strategic-number sn-stone-gatherer-percentage 20)
-(set-goal goal-past-castle TRUE)
 )
 
 (defrule
 (goal goal-past-earlycastle TRUE)
 (building-type-count-total university < 1)
-(can-build university)
+(can-build-with-escrow university)
 =>
+(release-escrow wood)
 (build university)
 )
 
 (defrule
 (goal goal-past-earlycastle TRUE)
 (building-type-count-total siege-workshop < 1)
-(can-build siege-workshop)
+(can-build-with-escrow siege-workshop)
 =>
+(release-escrow wood)
 (build siege-workshop)
 )
 
 (defrule
 (goal goal-past-earlycastle TRUE)
 (building-type-count-total barracks < 3)
-(can-build barracks)
+(can-build-with-escrow barracks)
 =>
+(release-escrow wood)
 (build barracks)
+)
+
+(defrule
+(goal goal-past-earlycastle TRUE)
+(building-type-count-total stable < 3)
+(can-build-with-escrow stable)
+=>
+(release-escrow wood)
+(build stable)
 )
 
 ; Let's train some rams!
 (defrule
 (current-age == castle-age)
 (unit-type-count-total battering-ram-line <= 2)
-(can-afford-unit battering-ram-line)
+(can-train battering-ram-line)
 =>
 (train battering-ram-line)
 )
@@ -50,19 +73,25 @@
 ; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Castle Age Late Researching ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 (defrule
-(can-research ri-ballistics)
+(can-research-with-escrow ri-ballistics)
 =>
+(release-escrow wood)
+(release-escrow gold)
 (research ri-ballistics)
 )
 
 (defrule
-(can-research ri-murder-holes)
+(can-research-with-escrow ri-murder-holes)
 =>
+(release-escrow food)
+(release-escrow stone)
 (research ri-murder-holes)
 )
 
 (defrule
-(can-research ri-masonry)
+(can-research-with-escrow ri-masonry)
 =>
+(release-escrow wood)
+(release-escrow food)
 (research ri-masonry)
 )

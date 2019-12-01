@@ -1,15 +1,15 @@
 (defconst num-castle-age-villagers 80)
 (defconst num-knight-squad 4)
 
-; This is when the early castle ends and late begins. We start focusing on more diverse units.
-(defrule
-(goal goal-past-feudal TRUE)
-(building-type-count-total castle < 1)
-(building-type-count-total stable < 2)
-(building-type-count-total town-center < 2)
-(can-build stable)
+(defrule ; When we arrive in the Castle age.
+(current-age == castle-age)
 =>
-(set-goal goal-past-earlycastle TRUE)
+(set-escrow-percentage food 30)
+(set-escrow-percentage wood 30)
+(set-escrow-percentage gold 30)
+(set-escrow-percentage stone 0)
+(set-goal goal-past-feudal TRUE)
+(disable-self)
 )
 
 (defrule
@@ -21,17 +21,27 @@
 
 (defrule
 (goal goal-past-feudal TRUE)
-(building-type-count-total stable < 3)
-(can-build stable)
+(building-type-count-total town-center < 3)
+(can-build-with-escrow town-center)
 =>
+(release-escrow wood)
+(build town-center)
+)
+
+(defrule
+(goal goal-past-feudal TRUE)
+(building-type-count-total stable < 2)
+(can-build-with-escrow stable)
+=>
+(release-escrow wood)
 (build stable)
 )
 
 ; Let's train some knights!.
 (defrule
 (current-age == castle-age)
-(unit-type-count-total knight-line <= 30)
-(can-afford-unit knight-line)
+(unit-type-count-total knight-line <= 10)
+(can-train knight-line)
 =>
 (train knight-line)
 )
@@ -58,14 +68,6 @@
 
 (defrule
 (goal goal-past-feudal TRUE)
-(building-type-count-total town-center < 3)
-(can-build town-center)
-=>
-(build town-center)
-)
-
-(defrule
-(goal goal-past-feudal TRUE)
 (can-build castle)
 =>
 (build castle)
@@ -86,7 +88,7 @@
 (current-age == castle-age)
 (town-under-attack)
 (unit-type-count-total spearman-line <= 10)
-(can-afford-unit spearman-line)
+(can-train spearman-line)
 =>
 (train spearman-line)
 )
@@ -97,47 +99,61 @@
 ; ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Castle Age Researching ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 (defrule
-(can-research ri-hand-cart)
+(can-research-with-escrow ri-hand-cart)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-hand-cart)
 )
 
 (defrule
-(can-research ri-gold-shaft-mining)
+(can-research-with-escrow ri-gold-shaft-mining)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-gold-shaft-mining)
 )
 
 (defrule
-(can-research ri-bow-saw)
+(can-research-with-escrow ri-bow-saw)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-bow-saw)
 )
 
 ; Let's research the essential blacksmith stuff.
 (defrule
-(can-research ri-iron-casting)
+(can-research-with-escrow ri-iron-casting)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research ri-iron-casting)
 )
 
 (defrule
-(can-research ri-chain-barding)
+(can-research-with-escrow ri-chain-barding)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research ri-chain-barding)
 )
 
 (defrule
 (goal goal-past-feudal TRUE)
-(can-research ri-fletching)
+(can-research-with-escrow ri-fletching)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research ri-fletching)
 )
 
 (defrule
 (not(town-under-attack))
-(can-research ri-pikeman)
+(can-research-with-escrow ri-pikeman)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research ri-pikeman)
 )
 

@@ -3,20 +3,33 @@
 (defconst timer-new-mill 2)
 (defconst timer-new-lumber-camp 4)
 
+(defrule ; When we arrive in the feudal age.
+(current-age == feudal-age)
+=>
+(set-escrow-percentage food 30)
+(set-escrow-percentage wood 30)
+(set-escrow-percentage gold 30)
+(set-escrow-percentage stone 0)
+(set-goal goal-past-dark TRUE)
+(disable-self)
+)
+
+
 (defrule ; Let's go to the next age!!
 (current-age == feudal-age)
 (building-type-count-total blacksmith > 0)
 (building-type-count-total stable > 0)
 (unit-type-count-total villager >= num-feudal-age-villagers)
-(can-research castle-age)
+(can-research-with-escrow castle-age)
 =>
+(release-escrow food)
+(release-escrow gold)
 (research castle-age)
 (chat-to-all "Elvis will see you in the next age, baby.")
 (set-strategic-number sn-food-gatherer-percentage 50)
 (set-strategic-number sn-wood-gatherer-percentage 20)
 (set-strategic-number sn-gold-gatherer-percentage 15)
 (set-strategic-number sn-stone-gatherer-percentage 15)
-(set-goal goal-past-feudal TRUE)
 )
 
 
@@ -93,33 +106,41 @@
 ; ~~~~~~~~~~~~~~ Researching for Feudal Age ~~~~~~~~~~~~~~
 
 (defrule
-(can-research ri-wheel-barrow)
+(can-research-with-escrow ri-wheel-barrow)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-wheel-barrow)
 )
 
 (defrule
-(can-research ri-gold-mining)
+(can-research-with-escrow ri-gold-mining)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-gold-mining)
 )
 
 (defrule
-(can-research ri-double-bit-axe)
+(can-research-with-escrow ri-double-bit-axe)
 =>
+(release-escrow food)
+(release-escrow wood)
 (research ri-double-bit-axe)
 )
 
 ; Let's research the essential blacksmith stuff.
 (defrule
-(can-research ri-forging)
+(can-research-with-escrow ri-forging)
 =>
+(release-escrow food)
 (research ri-forging)
 )
 
 (defrule
-(can-research ri-scale-barding)
+(can-research-with-escrow ri-scale-barding)
 =>
+(release-escrow food)
 (research ri-scale-barding)
 )
 
@@ -128,16 +149,18 @@
 (defrule
 (goal goal-past-dark TRUE)
 (building-type-count-total blacksmith < 1)
-(can-build blacksmith)
+(can-build-with-escrow blacksmith)
 =>
+(release-escrow wood)
 (build blacksmith)
 )
 
 (defrule
 (goal goal-past-dark TRUE)
 (building-type-count-total stable < 1)
-(can-build stable)
+(can-build-with-escrow stable)
 =>
+(release-escrow wood)
 (build stable)
 )
 
@@ -155,7 +178,7 @@
 (defrule ; Let's keep a reserve at all times.
 (current-age == feudal-age)
 (unit-type-count-total spearman-line < 3)
-(can-afford-unit spearman-line)
+(can-train spearman-line)
 =>
 (train spearman-line)
 )
@@ -164,7 +187,7 @@
 (current-age == feudal-age)
 (town-under-attack)
 (unit-type-count-total spearman-line <= 8)
-(can-afford-unit spearman-line)
+(can-train spearman-line)
 =>
 (train spearman-line)
 )
@@ -172,8 +195,9 @@
 (defrule
 (goal goal-past-dark TRUE)
 (town-under-attack)
-(can-research ri-scale-mail)
+(can-research-with-escrow ri-scale-mail)
 =>
+(release-escrow food)
 (research ri-scale-mail)
 )
 
