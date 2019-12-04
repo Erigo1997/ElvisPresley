@@ -1,16 +1,14 @@
 (defrule ; This is when the early castle ends and late begins. We start focusing on more diverse units.
 (goal goal-past-feudal TRUE)
-(building-type-count-total castle < 1)
-(building-type-count-total stable < 2)
-(building-type-count-total town-center < 2)
-(can-build stable)
+(building-type-count castle > 0)
+(building-type-count-total stable > 1)
+(building-type-count-total town-center > 1)
 =>
 (set-goal goal-past-earlycastle TRUE)
 )
 
 
 (defrule ; Let's go to the next age!!
-(goal goal-past-earlycastle TRUE)
 (can-research-with-escrow imperial-age)
 =>
 (release-escrow food)
@@ -94,4 +92,12 @@
 (release-escrow wood)
 (release-escrow food)
 (research ri-masonry)
+)
+
+(defrule
+(can-research-with-escrow ri-fortified-wall)
+=>
+(release-escrow wood)
+(release-escrow food)
+(research ri-fortified-wall)
 )

@@ -1,9 +1,9 @@
 (defrule ; When we arrive in the feudal age.
 (current-age == feudal-age)
 =>
-(set-escrow-percentage food 30)
-(set-escrow-percentage wood 30)
-(set-escrow-percentage gold 30)
+(set-escrow-percentage food 15)
+(set-escrow-percentage wood 15)
+(set-escrow-percentage gold 15)
 (set-escrow-percentage stone 0)
 (set-goal goal-past-dark TRUE)
 (disable-self)
@@ -14,7 +14,6 @@
 (current-age == feudal-age)
 (building-type-count-total blacksmith > 0)
 (building-type-count-total stable > 0)
-(unit-type-count-total villager >= num-feudal-age-villagers)
 (can-research-with-escrow castle-age)
 =>
 (release-escrow food)
@@ -31,51 +30,68 @@
 ; --------------------------------------- New Camps, throughout rest of game ------------------
 
 (defrule
-(current-age == feudal-age)
+	(building-type-count farm > 15)
+	(building-type-count lumber-camp > 0)
+	(building-type-count-total mill < 2)
+;	(idle-farm-count < 3)
+	(can-build mill)
 =>
-(enable-timer timer-new-mining-camp 1)
-(disable-self)
+	(build mill)
+)
+(defrule
+	(building-type-count farm > 25)
+	(building-type-count lumber-camp > 0)
+	(building-type-count-total mill < 3)
+;	(idle-farm-count < 3)
+	(can-build mill)
+=>
+	(build mill)
+)
+(defrule
+	(building-type-count farm > 35)
+	(building-type-count lumber-camp > 0)
+	(building-type-count-total mill < 4)
+;	(idle-farm-count < 3)
+	(can-build mill)
+=>
+	(build mill)
+)
+(defrule
+	(building-type-count farm > 45)
+	(building-type-count lumber-camp > 0)
+	(building-type-count-total mill < 5)
+;	(idle-farm-count < 3)
+	(can-build mill)
+=>
+	(build mill)
 )
 
 (defrule
-(current-age == feudal-age)
-=>
-(enable-timer timer-new-lumber-camp 1)
-(disable-self)
-)
-
-(defrule
-(current-age == feudal-age)
-=>
-(enable-timer timer-new-mill 1)
-(disable-self)
-)
-
-(defrule
-(timer-triggered timer-new-lumber-camp)
+(goal goal-past-dark TRUE)
+(dropsite-min-distance wood > 3)
+(resource-found wood)
 (can-build lumber-camp)
-(building-type-count-total barracks > 0)
 =>
 (build lumber-camp)
-(enable-timer timer-new-lumber-camp num-new-camp-timer)
 )
 
+
 (defrule
-(timer-triggered timer-new-mining-camp)
+(goal goal-past-dark TRUE)
+(dropsite-min-distance gold > 3)
+(resource-found gold)
 (can-build mining-camp)
-(building-type-count-total barracks > 0)
 =>
 (build mining-camp)
-(enable-timer timer-new-mining-camp num-new-camp-timer)
 )
 
 (defrule
-(timer-triggered timer-new-mill)
-(can-build mill)
-(building-type-count-total barracks > 0)
+(goal goal-past-dark TRUE)
+(dropsite-min-distance stone > 3)
+(resource-found stone)
+(can-build mining-camp)
 =>
-(build mill)
-(enable-timer timer-new-mill num-new-camp-timer)
+(build mining-camp)
 )
 
 ; ----------------------------------------------------------------------------------------------
@@ -96,6 +112,30 @@
 (can-build mining-camp)
 =>
 (build mining-camp)
+)
+
+(defrule
+(goal goal-past-dark TRUE)
+(can-build-wall-with-escrow 2 stone-wall-line)
+=>
+(release-escrow stone)
+(build-wall 2 stone-wall-line)
+)
+
+(defrule
+(goal goal-past-dark TRUE)
+(can-build-gate 2)
+=>
+(build-gate 2)
+(disable-self)
+)
+
+(defrule ; Copy of last rule to ensure 2 gates.
+(goal goal-past-dark TRUE)
+(can-build-gate 2)
+=>
+(build-gate 2)
+(disable-self)
 )
 
 ; ~~~~~~~~~~~~~~ Researching for Feudal Age ~~~~~~~~~~~~~~
@@ -194,6 +234,15 @@
 =>
 (release-escrow food)
 (research ri-scale-mail)
+)
+
+(defrule
+(goal goal-past-dark TRUE)
+(can-research-with-escrow ri-fletching)
+=>
+(release-escrow food)
+(release-escrow gold)
+(research ri-fletching)
 )
 
 ; ----------------------------------------------

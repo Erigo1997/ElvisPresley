@@ -1,9 +1,9 @@
 (defrule ; When we arrive in the Castle age.
 (current-age == castle-age)
 =>
-(set-escrow-percentage food 30)
-(set-escrow-percentage wood 30)
-(set-escrow-percentage gold 30)
+(set-escrow-percentage food 15)
+(set-escrow-percentage wood 15)
+(set-escrow-percentage gold 15)
 (set-escrow-percentage stone 0)
 (set-goal goal-past-feudal TRUE)
 (disable-self)
@@ -67,6 +67,7 @@
 (goal goal-past-feudal TRUE)
 (can-build castle)
 =>
+(up-assign-builders c: castle c: 4)
 (build castle)
 )
 

@@ -1,0 +1,60 @@
+(defrule
+(current-age == dark-age)
+(building-type-count-total lumber-camp > 0) ; We want a lumber camp before farms
+(unit-type-count-total villager > 15)
+(building-type-count-total farm < 15)
+(or
+	(food-amount < 400)
+	(wood-amount > 300)
+)
+(nand	; Spare wood for mining camp if it is wanted.
+	(building-type-count-total mining-camp == 0)
+	(strategic-number sn-gold-gatherer-percentage > 0)
+)
+(can-build farm)
+=>
+(build farm)
+)
+
+(defrule
+(current-age == feudal-age)
+(building-type-count-total lumber-camp > 0)
+(building-type-count-total farm < 40)
+(building-type-count-total mill > 0)
+(or
+	(food-amount < 400)
+	(wood-amount >= 600)
+)
+(can-build farm)
+=>
+(build farm)
+)
+
+(defrule
+(current-age == castle-age)
+(or
+	(building-type-count-total town-center >= 3)
+	(and
+		(building-type-count-total town-center < 3)
+		(food-amount < 200)
+	)
+)
+(food-amount < 800)
+(building-type-count-total farm < 40)
+(building-type-count-total lumber-camp > 0)
+(can-build farm)
+=>
+(build farm)
+)
+
+(defrule
+(current-age == imperial-age)
+(building-type-count-total lumber-camp > 0)
+(building-type-count-total farm < 40)
+(food-amount < 2000)
+(wood-amount > 2000)
+(idle-farm-count < 3)
+(can-build farm)
+=>
+(build farm)
+)

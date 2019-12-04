@@ -8,9 +8,7 @@
 (defconst goal-past-feudal 3)
 (defconst goal-past-earlycastle 4)
 (defconst goal-past-castle 5)
-(defconst goal-all-researches 6)
-(defconst num-new-camp-timer 800)
-(defconst num-dark-age-strikeforce 3)
+(defconst goal-post-imperial 6)
 (defconst num-dark-age-villagers 30)
 (defconst num-dark-age-villagers-age 20) ; Less than num-dark-age-villagers, so if we can go to next age early, let's do that.
 (defconst num-feudal-age-villagers 40)
@@ -20,9 +18,6 @@
 (defconst num-spearman-army 20)
 (defconst num-scorpion-army 6)
 (defconst num-imperial-age-villagers 100)
-(defconst timer-new-mining-camp 1)
-(defconst timer-new-mill 2)
-(defconst timer-new-lumber-camp 3)
 (defconst timer-attack 4)
 
 ;Let's lay down some ground rules.
@@ -30,8 +25,8 @@
 (true)
 =>
 ; Here I set up some strategic numbers.
-(set-difficulty-parameter ability-to-dodge-missiles 100)
-(set-difficulty-parameter ability-to-maintain-distance 100)
+(set-difficulty-parameter ability-to-maintain-distance 1)
+(set-difficulty-parameter ability-to-dodge-missiles 1)
 (set-strategic-number sn-do-not-scale-for-difficulty-level 1)
 (set-strategic-number sn-minimum-civilian-explorers 0)
 (set-strategic-number sn-cap-civilian-explorers 0)
@@ -47,8 +42,8 @@
 (set-goal goal-past-dark FALSE)
 (set-goal goal-past-feudal FALSE)
 (set-goal goal-past-earlycastle FALSE)
-(set-goal goal-past-castle TRUE)
-(set-goal goal-all-researches FALSE)
+(set-goal goal-past-castle FALSE)
+(set-goal goal-post-imperial FALSE)
 (disable-self)
 )
 
@@ -60,16 +55,10 @@
 (build house)
 )
 
-(defrule
-(not(current-age == dark-age))
-(building-type-count-total farm < 35) ; We're capping farms at 35.
-(idle-farm-count < 3) ; Only build farms if there are less than 3 idle farms
-=>
-(build farm)
-)
-
+(load "ElvisFarming")
 (load "ElvisDarkAge")
 (load "ElvisFeudalAge")
 (load "ElvisCastleAgeEarly")
 (load "ElvisCastleAgeLate")
 (load "ElvisImperialAge")
+(load "ElvisPostImperial")

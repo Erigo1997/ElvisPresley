@@ -13,7 +13,6 @@
 
 (defrule
 (current-age == imperial-age)
-(unit-type-count-total villager < num-imperial-age-villagers)
 (can-train villager)
 =>
 (train villager)
@@ -21,7 +20,6 @@
 ; Let's train some knights!.
 (defrule
 (current-age == imperial-age)
-(unit-type-count-total knight-line <= 20)
 (can-train knight-line)
 =>
 (train knight-line)
@@ -29,7 +27,6 @@
 
 (defrule
 (current-age == imperial-age)
-(unit-type-count-total spearman-line <= 30)
 (can-train spearman-line)
 =>
 (train spearman-line)
@@ -37,7 +34,6 @@
 
 (defrule
 (current-age == imperial-age)
-(unit-type-count-total scorpion-line <= 10)
 (can-train scorpion-line)
 =>
 (train scorpion-line)
@@ -45,7 +41,6 @@
 
 (defrule
 (current-age == imperial-age)
-(unit-type-count-total trebuchet < 2)
 (can-train trebuchet)
 =>
 (train trebuchet)

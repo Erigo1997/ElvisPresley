@@ -6,7 +6,7 @@
 (set-strategic-number sn-gold-gatherer-percentage 0)
 (set-strategic-number sn-stone-gatherer-percentage 0)
 (set-escrow-percentage food 0) ; Set some starting escrows. We only need to conserve wood in the dark age for a barracks.
-(set-escrow-percentage wood 20)
+(set-escrow-percentage wood 10)
 (set-escrow-percentage gold 0)
 (set-escrow-percentage stone 0)
 (disable-self)
@@ -83,16 +83,6 @@
 (build mining-camp)
 )
 
-(defrule
-(current-age == dark-age)
-(building-type-count-total lumber-camp > 0) ; We want a lumber camp before farms
-(unit-type-count-total villager > 15)
-(building-type-count-total farm < 15)
-(idle-farm-count < 4) ; Only build farms if there are less than 4 idle farms
-=>
-(build farm)
-)
-
 ; Construct barracks.
 (defrule
 (building-type-count-total mill > 0)
@@ -102,6 +92,7 @@
 (can-build-with-escrow barracks)
 =>
 (release-escrow wood)
+(set-escrow-percentage wood 0)
 (build barracks)
 )
 
